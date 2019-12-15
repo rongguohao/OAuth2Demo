@@ -37,17 +37,17 @@ namespace Idp
                 new Client
                 {
                     ClientId = "1",
-                    ClientName =  "haohaoplay",
+                    ClientName = "haohaoplay",
                     ClientUri = "http://localhost:4200",
-                    ClientSecrets = new List<Secret>(){new Secret("haohaopalysecret".Sha256())},
+                    ClientSecrets = {new Secret("haohaoplay secret".Sha256())},
 
-                    AllowedGrantTypes = GrantTypes.CodeAndClientCredentials,
+                    AllowedGrantTypes = GrantTypes.Code, //授权码模式
                     // AllowAccessTokensViaBrowser = true,
                     RequireConsent = false, // 勾选授权内容页面 默认为true 
-                    AccessTokenLifetime = 60,
-                    AuthorizationCodeLifetime = 60,
-                    
-                    RedirectUris = {"http://localhost:4200/user/signin-oidc"},
+                    // AccessTokenLifetime = 60,
+                    // AuthorizationCodeLifetime = 60,
+
+                    RedirectUris = {"http://localhost:4200/#/signin-oidc"},
 
                     // RedirectUris =
                     // {
@@ -59,19 +59,20 @@ namespace Idp
                     // {
                     //     "http://localhost:4200"
                     // },
-                    //
-                    
+                    // 
+
                     //浏览器端跨域设置
                     AllowedCorsOrigins =
                     {
                         "http://localhost:4200"
                     },
-                    
-                    AlwaysIncludeUserClaimsInIdToken = true,
 
+                    AlwaysIncludeUserClaimsInIdToken = true,
+                    
                     AllowOfflineAccess = true, // offline_access
 
-                    AllowedScopes = {
+                    AllowedScopes =
+                    {
                         "api1",
                         IdentityServerConstants.StandardScopes.OpenId,
                         IdentityServerConstants.StandardScopes.Email,
