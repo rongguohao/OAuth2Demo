@@ -34,12 +34,34 @@ namespace Idp
         public static IEnumerable<Client> Clients =>
             new Client[]
             {
-                new Client
+                new Client()
                 {
-                    ClientId = "1",
-                    ClientName = "haohaoplay",
+                    //客户端Id
+                    ClientId="1",
+                    ClientName="client1",
+                    //客户端密码
+                    ClientSecrets={new Secret("client1secret".Sha256()) },
+                    //客户端授权类型，Code:授权码模式
+                    AllowedGrantTypes=GrantTypes.Code,
+                    //允许登录后重定向的地址列表，可以有多个
+                    RedirectUris = {"https://localhost:5007/auth.html"},
+                    //允许访问的资源
+                    AllowedScopes={
+                       "api1",
+                        IdentityServerConstants.StandardScopes.OpenId,
+                        IdentityServerConstants.StandardScopes.Email,
+                        IdentityServerConstants.StandardScopes.Address,
+                        IdentityServerConstants.StandardScopes.Phone,
+                        IdentityServerConstants.StandardScopes.Profile
+                   }
+                },
+
+                new Client()
+                {
+                    ClientId = "2",
+                    ClientName = "client2",
                     ClientUri = "http://localhost:4200",
-                    ClientSecrets = {new Secret("haohaoplay secret".Sha256())},
+                    ClientSecrets = {new Secret("client2secret".Sha256())},
 
                     AllowedGrantTypes = GrantTypes.Code, //授权码模式
                     // AllowAccessTokensViaBrowser = true,
@@ -68,7 +90,7 @@ namespace Idp
                     },
 
                     AlwaysIncludeUserClaimsInIdToken = true,
-                    
+
                     AllowOfflineAccess = true, // offline_access
 
                     AllowedScopes =

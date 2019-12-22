@@ -27,18 +27,11 @@ namespace Api1Resource
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "http://localhost:4200";
+                    options.Authority = "http://localhost:5008";
                     options.ApiName = "api1";
                     options.RequireHttpsMetadata = false;
                     options.ApiSecret = "api1 secret";
                 });
-                //.AddJwtBearer("Bearer", options =>
-                //{
-                //    options.Authority = "http://localhost:5000";
-                //    options.RequireHttpsMetadata = false;
-
-                //    options.Audience = "api1";
-                //});
 
             services.AddMemoryCache();
 
@@ -63,6 +56,7 @@ namespace Api1Resource
             app.UseCors("AngularClientOrigin");
 
             app.UseAuthentication();
+
             app.UseMvc();
         }
     }
