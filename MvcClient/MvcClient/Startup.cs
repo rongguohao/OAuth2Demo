@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using IdentityModel;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
@@ -45,7 +45,7 @@ namespace MvcClient
                     options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                     options.Authority = "http://localhost:5008";
                     options.RequireHttpsMetadata = false;
-                    options.ClientId = "client1";
+                    options.ClientId = "1";
                     options.ClientSecret = "client1secret";
                     options.SaveTokens = true;
                     options.ResponseType = "code";
