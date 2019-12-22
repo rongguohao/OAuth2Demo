@@ -39,26 +39,26 @@ namespace MvcClient
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = OpenIdConnectDefaults.AuthenticationScheme;
             })
-                .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
-                {
-                    options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                    options.Authority = "http://localhost:5008";
-                    options.RequireHttpsMetadata = false;
-                    options.ClientId = "1";
-                    options.ClientSecret = "client1secret";
-                    options.SaveTokens = true;
-                    options.ResponseType = "code";
+            .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
+            {
+                options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.Authority = "http://localhost:5008";
+                options.RequireHttpsMetadata = false;
+                options.ClientId = "1";
+                options.ClientSecret = "client1secret";
+                options.SaveTokens = true;
+                options.ResponseType = "code";
 
-                    options.Scope.Clear();
-                    options.Scope.Add("api1");
-                    options.Scope.Add(OidcConstants.StandardScopes.OpenId);
-                    options.Scope.Add(OidcConstants.StandardScopes.Profile);
-                    options.Scope.Add(OidcConstants.StandardScopes.Email);
-                    options.Scope.Add(OidcConstants.StandardScopes.Phone);
-                    options.Scope.Add(OidcConstants.StandardScopes.Address);
-                    options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
-                });
+                options.Scope.Clear();
+                options.Scope.Add("api1");
+                options.Scope.Add(OidcConstants.StandardScopes.OpenId);
+                options.Scope.Add(OidcConstants.StandardScopes.Profile);
+                options.Scope.Add(OidcConstants.StandardScopes.Email);
+                options.Scope.Add(OidcConstants.StandardScopes.Phone);
+                options.Scope.Add(OidcConstants.StandardScopes.Address);
+                options.Scope.Add(OidcConstants.StandardScopes.OfflineAccess);
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

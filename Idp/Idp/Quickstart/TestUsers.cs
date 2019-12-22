@@ -11,6 +11,9 @@ namespace IdentityServer4.Quickstart.UI
 {
     public class TestUsers
     {
+        /// <summary>
+        /// 可通过以下用户的用户名和密码登录授权服务器
+        /// </summary>
         public static List<TestUser> Users = new List<TestUser>
         {
             new TestUser{SubjectId = "818727", Username = "alice", Password = "alice", 

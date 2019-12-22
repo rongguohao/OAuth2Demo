@@ -10,6 +10,9 @@ namespace Idp
 {
     public static class Config
     {
+        /// <summary>
+        /// 可访问的用户资源种类
+        /// </summary>
         public static IEnumerable<IdentityResource> Ids =>
             new IdentityResource[]
             {
@@ -20,7 +23,9 @@ namespace Idp
                 new IdentityResources.Email(),
             };
 
-
+        /// <summary>
+        /// 受保护的Api信息
+        /// </summary>
         public static IEnumerable<ApiResource> Apis =>
             new ApiResource[]
             {
@@ -30,7 +35,9 @@ namespace Idp
                 }
             };
 
-
+        /// <summary>
+        /// 客户端信息
+        /// </summary>
         public static IEnumerable<Client> Clients =>
             new Client[]
             {
