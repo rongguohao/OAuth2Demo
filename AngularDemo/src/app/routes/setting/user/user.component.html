@@ -1,0 +1,306 @@
+<page-header [breadcrumb]="breadcrumb">
+    <ng-template #breadcrumb>
+        <nz-breadcrumb>
+            <nz-breadcrumb-item>系统</nz-breadcrumb-item>
+            <nz-breadcrumb-item>设置</nz-breadcrumb-item>
+            <nz-breadcrumb-item>用户</nz-breadcrumb-item>
+        </nz-breadcrumb>
+    </ng-template>
+</page-header>
+<nz-card [nzBordered]="false">
+    <form nz-form [nzLayout]="'inline'" class="search__form" [formGroup]="searchForm">
+        <nz-row [nzGutter]="{ md: 8, lg: 24, xl: 48 }">
+            <nz-col nzMd="4" nzSm="24">
+                <nz-form-item>
+                    <nz-form-label nzFor="Name">姓名</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input id="sName" formControlName="sName" autocomplete="off">
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+            <nz-col nzMd="4" nzSm="24">
+                <nz-form-item>
+                    <nz-form-label nzFor="phone">手机号</nz-form-label>
+                    <nz-form-control>
+                        <input nz-input id="sPhone" formControlName="sPhone" autocomplete="off">
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+            <nz-col nzMd="4" nzSm="24" *ngIf="expandForm">
+                <nz-form-item>
+                    <nz-form-label nzFor="sEnabled">状态</nz-form-label>
+                    <nz-form-control>
+                        <nz-select [nzPlaceHolder]="'请选择'" nzId="sEnabled" [nzShowSearch]="true" formControlName="sEnabled">
+                            <nz-option *ngFor="let i of statuses; let idx = index" [nzLabel]="i.text" [nzValue]="i.value"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+            <nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+                <nz-form-item>
+                    <nz-form-label nzFor="sLastLoginTime">最后登录时间</nz-form-label>
+                    <nz-form-control>
+                        <nz-range-picker [nzShowTime]="{ nzFormat: 'HH:mm' }" nzFormat="yyyy-MM-dd HH:mm" id="sLastLoginTime" formControlName="sLastLoginTime"></nz-range-picker>
+                        <!-- <nz-date-picker nzPlaceHolder="开始时间"> </nz-date-picker>
+                        <nz-date-picker nzPlaceHolder="结束时间"> </nz-date-picker> -->
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col>
+
+            <!-- <nz-col nzMd="8" nzSm="24" *ngIf="expandForm">
+                <nz-form-item>
+                    <nz-form-label nzFor="status3">使用状态</nz-form-label>
+                    <nz-form-control>
+                        <nz-select [nzPlaceHolder]="'请选择'" nzId="status3" [nzShowSearch]="true">
+                            <nz-option *ngFor="let i of status; let idx = index" [nzLabel]="i.text" [nzValue]="idx"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+            </nz-col> -->
+            <nz-col [nzSpan]="expandForm ? 24 : 8" [class.text-right]="expandForm">
+                <button nz-button type="submit" [nzType]="'primary'" [nzLoading]="loading" (click)="getUsers()">查询</button>
+                <button nz-button type="reset" class="mx-sm">重置</button>
+                <a (click)="expandForm=!expandForm">
+            {{expandForm ? '收起' : '展开'}}
+            <i class="anticon" [class.anticon-down]="!expandForm" [class.anticon-up]="expandForm"></i>
+          </a>
+            </nz-col>
+        </nz-row>
+    </form>
+    <div nz-row class="mb-md">
+        <div nz-col nzSpan="12">
+            <button nz-button [nzType]="'primary'" (click)="add(modalContent)">
+                        <i nz-icon type="plus"></i>
+                        <span>添加</span>
+                      </button>
+            <nz-dropdown [nzPlacement]="'bottomLeft'">
+                <button nz-button nz-dropdown class="ml-sm">
+                                更多操作
+                                <i nz-icon type="down"></i>
+                              </button>
+                <ul nz-menu>
+                    <li nz-menu-item (click)="export()">导出</li>
+                    <li nz-menu-item (click)="exportTemplate()">导出模板</li>
+                </ul>
+            </nz-dropdown>
+            <button nz-button [nzType]="'default'" (click)="fileAllUp()">
+                <i nz-icon type="upload"></i>
+                <span>上传Excel</span>
+            </button>
+            <input type="file" id="fileInput"  ng2FileSelect [uploader]="uploader" class="ml-sm"  />
+
+            <!-- <h5>文件数量: {{ uploader?.queue?.length }}</h5> -->
+
+            <!-- <table>
+                <thead>
+                    <tr>
+                        <th>名称</th>
+                        <th>大小</th>
+                        <th>状态</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of uploader.queue">
+                        <td><strong>{{ item?.file?.name }}</strong></td>
+         
+                        <td><strong>{{ item?.file?.size/1024/1024 | number:'.2' }} MB</strong></td>
+                        <td class="tableth">
+                            <span *ngIf="item.isSuccess">成功</span>
+                            <span *ngIf="!item.isUploaded">未上传</span>
+                            <span *ngIf="item.isError">错误</span>
+                        </td>
+                        <td>
+                            <button (click)="item.remove()">删除</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table> -->
+
+
+            <!-- <button (click)="fileAllDelete()">清除列表</button> -->
+        </div>
+
+    </div>
+    <!-- <ng-container *ngIf="selectedRows.length > 0">
+        <button nz-button class="ml-sm">批量操作</button>
+        <nz-dropdown [nzPlacement]="'bottomLeft'">
+            <button nz-button nz-dropdown class="ml-sm">
+          更多操作
+          <i nz-icon type="down"></i>
+        </button>
+            <ul nz-menu>
+                <li nz-menu-item (click)="remove()">删除</li>
+                <li nz-menu-item (click)="approval()">批量审批</li>
+            </ul>
+        </nz-dropdown>
+    </ng-container> -->
+    <nz-table #nzTable [nzData]="dataSet" (nzPageIndexChange)="pageIndexChange($event)" (nzPageSizeChange)="pageSizeChange($event)" [nzShowTotal]="totalTemplate" [nzFrontPagination]="false" [nzPageIndex]="pageIndex" [nzPageSize]="pageSize" [nzTotal]="total"
+        [nzLoading]="loading" nzShowSizeChanger nzShowQuickJumper [nzScroll]="{ x:'1475px',y: '450px' }">
+        <thead (nzSortChange)="sort($event)" nzSingleSort>
+            <tr>
+                <th nzLeft="0px" nzWidth="60px">序号</th>
+                <th nzLeft="60px" nzWidth="115px">姓名</th>
+                <th nzWidth="100px" nzShowFilter [nzFilters]="filterGender" (nzFilterChange)="updateFilter($event)">性别</th>
+                <th nzWidth="100px" nzShowSort nzSortKey="0">年龄</th>
+                <th nzWidth="150px">手机号</th>
+                <th nzWidth="200px">邮箱</th>
+                <th nzWidth="100px">微信</th>
+                <th nzWidth="100px">状态</th>
+                <th nzWidth="200px">最后登录时间</th>
+                <th nzWidth="200px">最后登录地点</th>
+                <th nzRight="0px" nzWidth="150px">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let d of nzTable.data;let idx=index;">
+                <td nzLeft="0px">{{idx+1}}</td>
+                <td nzLeft="60px">{{d.Name}}</td>
+                <td nzWidth="100px">{{d.GenderString}}</td>
+                <td nzWidth="100px">{{d.Age}}</td>
+                <td nzWidth="150px">{{d.Phone}}</td>
+                <td nzWidth="200px">{{d.Email}}</td>
+                <td nzWidth="150px">{{d.WeChat}}</td>
+                <td nzWidth="100px">
+                    <p [class.text-success-light]="d.Enabled" [class.text-error-light]="!d.Enabled">{{d.EnabledString}}</p>
+                </td>
+                <td nzWidth="200px">{{d.LastLoginTime|date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                <td nzWidth="200px">{{d.LastLoginIP}}</td>
+                <td nzRight="0px">
+                    <a href="javascript:;" (click)="edit(d.Id,modalContentEdit)">编辑</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a href="javascript:;" (click)="disable(d.Id)" *ngIf="d.Enabled">注销</a>
+                    <a href="javascript:;" (click)="enable(d.Id)" *ngIf="!d.Enabled">启用</a>
+                    <nz-divider nzType="vertical"></nz-divider>
+                    <a href="javascript:;" (click)="delete(d.Id)">删除</a>
+                </td>
+            </tr>
+        </tbody>
+    </nz-table>
+</nz-card>
+
+<ng-template #totalTemplate let-total>
+    共{{total}}条
+</ng-template>
+
+<ng-template #modalContent>
+
+    <form nz-form [formGroup]="validateForm">
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="fName" placeholder="">
+                <!-- <nz-form-explain *ngIf="validateForm.get('fName').dirty && validateForm.get('fName').errors"></nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>账号</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="fLoginName" placeholder="">
+                <!-- <nz-form-explain *ngIf="validateForm.get('fLoginName').dirty && validateForm.get('fLoginName').errors"></nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>密码</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="fPassword" placeholder="" type="password" autocomplete="new-password" (input)="resetRePassword()">
+                <!-- <nz-form-explain *ngIf="validateForm.get('fPassword').dirty && validateForm.get('fPassword').errors"></nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>重复密码</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="fRePassword" placeholder="" type="password" autocomplete="new-password" [(ngModel)]="rePassword">
+                <!-- <nz-form-explain *ngIf="validateForm.get('fRePassword').dirty && validateForm.get('fRePassword').errors">请再次输入密码</nz-form-explain> -->
+                <!-- <nz-form-explain *ngIf=" validateForm.get('fRePassword2').dirty &&validateForm.get('fRePassword2').errors">密码不一致</nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>年龄</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <nz-input-number formControlName="fAge" [nzMin]="18" [nzMax]="60" [nzStep]="1" [nzFormatter]="formatterAge" [nzParser]="parserAge"></nz-input-number>
+                <!-- <nz-form-explain *ngIf="validateForm.get('fAge').dirty && validateForm.get('fAge').errors"></nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">性别</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+                <nz-radio-group formControlName="fGender" [(ngModel)]="genderValue">
+                    <label nz-radio nzValue="1">男</label>
+                    <label nz-radio nzValue="0">女</label>
+                </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>手机号</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="fPhone" placeholder="">
+                <!-- <nz-form-explain *ngIf="validateForm.get('fPhone').dirty && validateForm.get('fPhone').errors"></nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">邮箱地址</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="fEmail" placeholder="">
+                <nz-form-explain *ngIf="isAdd&&validateForm.get('fEmail').dirty && validateForm.get('fEmail').errors"></nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">微信号</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="fWechat" placeholder="">
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+
+</ng-template>
+
+<ng-template #modalContentEdit>
+
+    <form nz-form [formGroup]="validateForm">
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>姓名</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="fName" placeholder="">
+                <!-- <nz-form-explain *ngIf="validateForm.get('fName').dirty && validateForm.get('fName').errors"></nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>年龄</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <nz-input-number formControlName="fAge" [nzMin]="18" [nzMax]="60" [nzStep]="1" [nzFormatter]="formatterAge" [nzParser]="parserAge"></nz-input-number>
+                <!-- <nz-form-explain *ngIf="validateForm.get('fAge').dirty && validateForm.get('fAge').errors"></nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">性别</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+                <nz-radio-group formControlName="fGender" [(ngModel)]="genderValue">
+                    <label nz-radio nzValue="1">男</label>
+                    <label nz-radio nzValue="0">女</label>
+                </nz-radio-group>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>手机号</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback>
+                <input nz-input formControlName="fPhone" placeholder="">
+                <!-- <nz-form-explain *ngIf="validateForm.get('fPhone').dirty && validateForm.get('fPhone').errors"></nz-form-explain> -->
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">邮箱地址</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="fEmail" placeholder="">
+                <nz-form-explain *ngIf="isAdd&&validateForm.get('fEmail').dirty && validateForm.get('fEmail').errors"></nz-form-explain>
+            </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+            <nz-form-label [nzSpan]="7">微信号</nz-form-label>
+            <nz-form-control [nzSpan]="12">
+                <input nz-input formControlName="fWechat" placeholder="">
+            </nz-form-control>
+        </nz-form-item>
+    </form>
+
+</ng-template>
