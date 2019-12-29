@@ -21,7 +21,7 @@ namespace MvcClient.Controllers
         public async Task<IActionResult> Index()
         {
             var client = new HttpClient();
-            var disco = await client.GetDiscoveryDocumentAsync("http://localhost:5008/");
+            var disco = await client.GetDiscoveryDocumentAsync("http://localhost:5008");
             if (disco.IsError)
             {
                 throw new Exception(disco.Error);
@@ -30,7 +30,7 @@ namespace MvcClient.Controllers
             var accessToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.AccessToken);
 
             client.SetBearerToken(accessToken);
-            var response = await client.GetAsync("http://localhost:5009/identity");
+            var response = await client.GetAsync("http://localhost:5009/api/city");
             if (!response.IsSuccessStatusCode)
             {
                 if (response.StatusCode == HttpStatusCode.Unauthorized)

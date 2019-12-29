@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api1Resource.Controllers
 {
-    [Route("identity")]
+    [Route("api/identity")]
     [Authorize]
     public class IdentityController : ControllerBase
     {

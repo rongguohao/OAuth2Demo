@@ -50,29 +50,15 @@ namespace Idp
                     ClientSecrets={new Secret("client1secret".Sha256()) },
                     //客户端授权类型，Code:授权码模式
                     AllowedGrantTypes=GrantTypes.Code,
-                   // //允许登录后重定向的地址列表，可以有多个
-                   // RedirectUris = {"http://localhost:5007/auth.html"},
-                   // //允许访问的资源
-                   // AllowedScopes={
-                   //    "api1",
-                   //     IdentityServerConstants.StandardScopes.OpenId,
-                   //     IdentityServerConstants.StandardScopes.Email,
-                   //     IdentityServerConstants.StandardScopes.Address,
-                   //     IdentityServerConstants.StandardScopes.Phone,
-                   //     IdentityServerConstants.StandardScopes.Profile
-                   //}
-
-
-
+                    //允许登录后重定向的地址列表
                     RedirectUris = { "http://localhost:5007/signin-oidc" },
 
                     FrontChannelLogoutUri = "http://localhost:5007/signout-oidc",
                     PostLogoutRedirectUris = { "http://localhost:5007/signout-callback-oidc" },
 
                     AlwaysIncludeUserClaimsInIdToken = true,
-
-                    AllowOfflineAccess = true, // offline_access
-                    AccessTokenLifetime = 60, // 60 seconds
+                    AllowOfflineAccess = true, 
+                    AccessTokenLifetime = 60,
 
                     AllowedScopes =
                     {
@@ -93,24 +79,11 @@ namespace Idp
                     ClientSecrets = {new Secret("client2secret".Sha256())},
 
                     AllowedGrantTypes = GrantTypes.Code, //授权码模式
-                    // AllowAccessTokensViaBrowser = true,
                     RequireConsent = false, // 勾选授权内容页面 默认为true 
-                    // AccessTokenLifetime = 60,
-                    // AuthorizationCodeLifetime = 60,
+                    AccessTokenLifetime = 7200, // token有效期
+                    AuthorizationCodeLifetime = 3600, // code 有效期
 
                     RedirectUris = {"http://localhost:4200/#/signin-oidc"},
-
-                    // RedirectUris =
-                    // {
-                    //     "http://localhost:4200/user/signin-oidc",
-                    //     "http://localhost:4200/redirect-silentrenew"
-                    // },
-
-                    // PostLogoutRedirectUris =
-                    // {
-                    //     "http://localhost:4200"
-                    // },
-                    // 
 
                     //浏览器端跨域设置
                     AllowedCorsOrigins =
@@ -120,7 +93,7 @@ namespace Idp
 
                     AlwaysIncludeUserClaimsInIdToken = true,
 
-                    AllowOfflineAccess = true, // offline_access
+                    AllowOfflineAccess = true, 
 
                     AllowedScopes =
                     {

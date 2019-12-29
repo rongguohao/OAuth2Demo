@@ -11,14 +11,10 @@ namespace Api1Resource.Controllers
     [Authorize]
     public class CityController: Controller
     {
-        private readonly List<City> _Citys;
-        private const string Key = "City_KEY";
-        private readonly IMemoryCache _memoryCache;
 
-        public CityController(IMemoryCache memoryCache)
+        public IActionResult Get()
         {
-            _memoryCache = memoryCache;
-            _Citys = new List<City>
+            return Ok(new List<City>
             {
                 new City
                 {
@@ -40,25 +36,7 @@ namespace Api1Resource.Controllers
                     Id = Guid.NewGuid(),
                     CityName = "广州"
                 }
-            };
-
-            if (!memoryCache.TryGetValue(Key, out List<City> citys))
-            {
-                var options = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1));
-                _memoryCache.Set(Key, citys, options);
-            }
-        }
-
-        public IActionResult Get()
-        {
-            if (!_memoryCache.TryGetValue(Key, out List<City> citys))
-            {
-                citys = _Citys;
-                var options = new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1));
-                _memoryCache.Set(Key, citys, options);
-            }
-
-            return Ok(citys);
+            });
         }
     }
 }

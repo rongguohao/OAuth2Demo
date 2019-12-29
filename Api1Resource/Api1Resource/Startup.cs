@@ -27,7 +27,7 @@ namespace Api1Resource
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "http://localhost:5008";
+                    options.Authority = "http://localhost:5008"; //授权服务器地址
                     options.ApiName = "api1";
                     options.RequireHttpsMetadata = false;
                     options.ApiSecret = "api1 secret";
